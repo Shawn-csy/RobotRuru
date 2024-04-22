@@ -41,7 +41,8 @@ def handle_text_message(event):
 
     elif '雷達' == text:
         handle_radar(event)
-
+    elif '本週國師' == text :
+        handle_weekfate(event)
     elif '抽淺草寺' in text:
         handle_get_ticket(event,'normal')
     elif '抽快樂淺草寺' in text:

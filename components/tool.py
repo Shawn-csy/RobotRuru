@@ -46,7 +46,6 @@ def handle_week_astro(event):
     if text in astro:
         try:
             data = astr(text)
-            data.insert(0,'\nd(d＇∀＇)來自科技紫微網,你今天迷信了嗎(`･∀･b)b')
             response = '\n'.join(data)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(response))
         except Exception as e:
@@ -62,6 +61,8 @@ def handle_help(event):
         '獲得該天運勢\n\n'
         '## 輸入-w 星座\n'
         '獲得該週運勢\n\n'
+        '## 輸入-本週國師\n'
+        '獲得國師版該週運勢\n\n'
         '## -抽籤\n'
         '抽非淺草簽\n\n'
         '## 抽淺草寺\n'
@@ -102,7 +103,6 @@ def handle_get_ticket(event,type):
         data = get_ticket()
     else:
         data = get_good_ticket()
-    data[0].append('上班：想下班永遠大吉')
     content = '\n'.join(data[0])
     img = data[1]
     text_message = TextSendMessage(text=content)
@@ -144,6 +144,11 @@ def handle_showallfood(event):
         res += f"{index + 1}：\n{title}\n{url}\n\n"
 
     text_message = TextSendMessage(text=res)
+    line_bot_api.reply_message(event.reply_token, text_message)
+
+def handle_weekfate(event):
+    data = weeklyfate()
+    text_message = TextSendMessage(text=data)
     line_bot_api.reply_message(event.reply_token, text_message)
 
 
