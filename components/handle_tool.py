@@ -2,6 +2,7 @@
 from linebot.models import TextSendMessage, ImageSendMessage
 from components.astr import *
 from components.get_ticket import *
+from components.tool_box import *
 from linebot import LineBotApi
 from dotenv import load_dotenv
 from plurk_oauth import PlurkAPI
@@ -61,7 +62,7 @@ def handle_help(event):
         '獲得該天運勢\n\n'
         '## 輸入-w 星座\n'
         '獲得該週運勢\n\n'
-        '## 輸入-本週國師\n'
+        '## 輸入 本週國師\n'
         '獲得國師版該週運勢\n\n'
         '## -抽籤\n'
         '抽非淺草簽\n\n'
@@ -74,6 +75,8 @@ def handle_help(event):
         '獲得即時天氣雲圖\n\n'
         '## 好餓\n'
         '獲得隨機推薦店家\n\n'
+        '## - 輸入`-隨機 [ 物件 物件 物件 ]` \n'
+        '從物件中隨機挑選一個輸出, 可使用空格或,分隔\n\n'
         '## --update googlemap連結\n'
         '更新進推薦資料庫\n'
         '## --showfoodlist\n'
@@ -95,7 +98,7 @@ def handle_spin(event):
 
 def handle_radar(event):
     data = radar()
-    image_message = ImageSendMessage(original_content_url=data[0], preview_image_url=data[1])
+    image_message = ImageSendMessage(original_content_url=data[0], preview_image_url=data[0])
     line_bot_api.reply_message(event.reply_token, image_message)
 
 def handle_get_ticket(event,type):
@@ -151,5 +154,10 @@ def handle_weekfate(event):
     text_message = TextSendMessage(text=data)
     line_bot_api.reply_message(event.reply_token, text_message)
 
+
+def handle_random_box(event):
+    data = random_box(event)
+    text_message = TextSendMessage(text=data)
+    line_bot_api.reply_message(event.reply_token, text_message)
 
 

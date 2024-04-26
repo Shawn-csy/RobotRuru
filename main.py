@@ -1,8 +1,10 @@
+import re
+
 from flask import Flask, request, abort
 from linebot import WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage
-from components.tool import *
+from components.handle_tool import *
 import os
 from dotenv import load_dotenv
 
@@ -38,8 +40,7 @@ def handle_text_message(event):
 
     elif '-抽籤' in text:
         handle_spin(event)
-
-    elif '雷達' == text:
+    elif '雷達' == text: #雷達縮圖有問題
         handle_radar(event)
     elif '本週國師' == text :
         handle_weekfate(event)
@@ -55,6 +56,9 @@ def handle_text_message(event):
         handle_updatefood(event)
     elif '--showfoodlist' in text :
         handle_showallfood(event)
+    elif '-隨機' in text:
+       handle_random_box(event)
+
 
 
 if __name__ == "__main__":
