@@ -31,7 +31,7 @@ def handle_astro(event):
     if text in astro:
         try:
             data = astr_today(text)
-            data.insert(0,'\nd(d＇∀＇)來自科技紫微網,你今天迷信了嗎(`･∀･b)b')
+            data.insert(0,'\n')
             response = '\n'.join(data)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(response))
         except Exception as e:
@@ -106,6 +106,7 @@ def handle_get_ticket(event,type):
         data = get_ticket()
     else:
         data = get_good_ticket()
+
     content = '\n'.join(data[0])
     img = data[1]
     text_message = TextSendMessage(text=content)

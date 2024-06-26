@@ -24,37 +24,52 @@ def process_url(rndNum):
     resUrl['Img_url']=img_url
     return resUrl
 
+
 def get_content(soup):
     data = soup.find_all('p')
-    index = {}
-    for i in range(len(data)):
-        if '第' in data[i].getText() and i > 10:
-            index['start_index'] = i
-            break
-    for i in range(len(data)):
-        if '願望：'in data[i].getText():
-            index['end_index']= i
-            break
-    res_data = data[index['start_index']:index['end_index']+1]
-    res_content = [i.getText().strip().strip('\n') for i in res_data]
+    start_index, end_index = None, None
 
-    return res_content
+    for i, p in enumerate(data):
+        text = p.get_text()
+        if start_index is None and '第' in text and i > 2:
+            start_index = i
+        if '願望：' in text:
+            end_index = i
+            break
+
+
+    if start_index is not None and end_index is not None:
+        res_data = data[start_index:end_index + 1]
+        res_content = [p.get_text().strip() for p in res_data]
+        return res_content
+    else:
+        # 如果沒有找到相應的段落，返回空列表或其他適當的值
+        return ['我有什麼地方出錯了,救']
+
+
+
 
 
 def get_ticket():
     rndNum = random.randint(1, 100)
     url = process_url(rndNum)
+
     try:
         res2 =requests.get(url['Text_url'])
+
         if res2.status_code == 200:
             html_content = res2.content.decode('big5', 'ignore')
             soup = BeautifulSoup(html_content, 'html.parser')
+
             if rndNum == 57:
                 content = get_content(soup)[1:] #第57首格式有錯
             else:
                 content = get_content(soup)
 
+
+
             res =[content,url['Img_url']]
+
             return res
     except Exception as e:
         return e
