@@ -31,8 +31,7 @@ def handle_astro(event):
     if text in astro:
         try:
             data = astr_today(text)
-            data.insert(0,'\n')
-            response = '\n'.join(data)
+            response = data
             line_bot_api.reply_message(event.reply_token, TextSendMessage(response))
         except Exception as e:
             print("Error:", e)
@@ -47,7 +46,7 @@ def handle_week_astro(event):
     if text in astro:
         try:
             data = astr(text)
-            response = '\n'.join(data)
+            response = data
             line_bot_api.reply_message(event.reply_token, TextSendMessage(response))
         except Exception as e:
             print("Error:", e)
