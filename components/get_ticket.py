@@ -41,6 +41,7 @@ def get_content(soup):
     if start_index is not None and end_index is not None:
         res_data = data[start_index:end_index + 1]
         res_content = [p.get_text().strip() for p in res_data]
+
         return res_content
     else:
         return ['我有什麼地方出錯了,救']
@@ -55,6 +56,7 @@ def get_ticket():
 
     try:
         res2 =requests.get(url['Text_url'])
+        content = ""
 
         if res2.status_code == 200:
             html_content = res2.content.decode('big5', 'ignore')
@@ -67,9 +69,10 @@ def get_ticket():
 
 
 
-            res =[content,url['Img_url']]
+        res =[content,url['Img_url']]
 
-            return res
+
+        return res
     except Exception as e:
         return e
 
