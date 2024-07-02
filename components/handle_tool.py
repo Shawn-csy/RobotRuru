@@ -107,7 +107,7 @@ def handle_get_ticket(event,type):
     else:
         data = get_good_ticket()
 
-    content = '\n'.join(data[0])
+    content = data[0]
     img = data[1]
     text_message = TextSendMessage(text=content)
     image_message = ImageSendMessage(original_content_url=img, preview_image_url=img)
