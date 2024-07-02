@@ -43,7 +43,6 @@ def get_content(soup):
         res_content = [p.get_text().strip() for p in res_data]
         return res_content
     else:
-        # 如果沒有找到相應的段落，返回空列表或其他適當的值
         return ['我有什麼地方出錯了,救']
 
 
