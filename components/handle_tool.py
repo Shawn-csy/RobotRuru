@@ -32,7 +32,7 @@ def handle_astro(event):
         try:
             data = astr_today(text)
             data.insert(0,'\n')
-            response = data
+            response = '\n'.join(data)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(response))
         except Exception as e:
             print("Error:", e)
