@@ -31,6 +31,7 @@ def handle_astro(event):
     if text in astro:
         try:
             data = astr_today(text)
+            data.insert(0,'\n')
             response = data
             line_bot_api.reply_message(event.reply_token, TextSendMessage(response))
         except Exception as e:
