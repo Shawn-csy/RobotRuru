@@ -58,6 +58,8 @@ def handle_text_message(event):
         handle_showallfood(event)
     elif '-隨機' in text:
        handle_random_box(event)
+    elif '風險骰子' in text:
+        handle_rich_dice(event)
 
 
 

@@ -164,4 +164,10 @@ def handle_random_box(event):
     text_message = TextSendMessage(text=data)
     line_bot_api.reply_message(event.reply_token, text_message)
 
+def handle_rich_dice(event):
+    data = rich_dice(event)
+    image_message = ImageSendMessage(original_content_url=data, preview_image_url=data)
+    line_bot_api.reply_message(event.reply_token, image_message)
+
+
 

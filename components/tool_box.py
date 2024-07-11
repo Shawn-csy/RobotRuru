@@ -47,3 +47,13 @@ def random_box(event):
         return res
     else:
         return "格式錯誤 請依照 #-隨機 [ 項目 項目 ]# 使用/空白/或/,/分隔"
+
+
+def rich_dice(event):
+    dice_value = random.randint(1,20)
+    if dice_value == 20 :
+        res = "https://storage.googleapis.com/linebot01/dice/tw-11134201-7qul2-lhzv1nmfozwua7.jpeg"
+    else:
+        res = "https://storage.googleapis.com/linebot01/dice/22030923649549_637%20(1).jpg"
+
+        return res
