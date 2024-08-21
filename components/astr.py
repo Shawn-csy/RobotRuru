@@ -46,32 +46,47 @@ def astr_today(i):
 
 
 def weeklyfate():
-    #國師podcast內容
     url = "https://podcasts.apple.com/tw/podcast/%E5%94%90%E9%99%BD%E9%9B%9E%E9%85%92%E5%B1%8B/id1536374746"
     res = requests.get(url)
+
+
+    if res.status_code != 200:
+        print("Failed to fetch URL")
+        return None
+
     def timedefine(podcasttime):
-        date_time1 = datetime.today()
-        date_string2 = podcasttime
-        date_time2 = datetime.strptime(date_string2, "%Y年%m月%d日")
-        difference = date_time1 - date_time2
-        difference_days = difference.days
-        return difference_days
+        try:
 
-    if res.status_code == 200:
-        html_content = res.content.decode()
-        soup = BeautifulSoup(html_content, 'html.parser')
-        script_tag = soup.find("script", {"name": "schema:podcast-show"})
+            date_time1 = datetime.today()
+            date_time2 = datetime.strptime(podcasttime, "%Y-%m-%d")
+            difference = date_time1 - date_time2
+            return difference.days
+        except ValueError as ve:
+            print(f"Error parsing date: {ve}")
+            return None
 
-        if script_tag:
-            try:
-                json_data = script_tag.string
-                podcast_info = json.loads(json_data)
-                workdata = podcast_info['workExample']
-                for i in workdata:
-                    if "【本週提醒】" in i["name"]:
-                        if timedefine(i["datePublished"]) < 8:
-                            return i['description']
-            except Exception as e :
-                return e
+    html_content = res.content.decode()
+    soup = BeautifulSoup(html_content, 'html.parser')
+    script_tag = soup.find("script", {"id": "schema:show"})
 
 
+    if not script_tag:
+        print("No script tag found with the specified name.")
+        return None
+
+    try:
+        json_data = script_tag.string
+        podcast_info = json.loads(json_data)
+        workdata = podcast_info['workExample']
+        for item in workdata:
+            if "【本週提醒】" in item["name"]:
+                days_diff = timedefine(item["datePublished"])
+                if days_diff is not None and days_diff < 8:
+                    return item['description']
+        return "No relevant podcast found within the last week."
+    except json.JSONDecodeError as je:
+        print(f"Error decoding JSON: {je}")
+        return None
+    except KeyError as ke:
+        print(f"Missing expected key in JSON data: {ke}")
+        return None

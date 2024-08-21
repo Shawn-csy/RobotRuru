@@ -1,5 +1,5 @@
 
-from linebot.models import TextSendMessage, ImageSendMessage
+from linebot.models import TextSendMessage, ImageSendMessage,Sender
 from components.astr import *
 from components.get_ticket import *
 from components.tool_box import *
@@ -23,6 +23,8 @@ line_bot_api = LineBotApi(channel_access_token)
 plurk = PlurkAPI(CONSUMER_KEY, CONSUMER_SECRET)
 plurk.authorize(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 
+# sendertool = [Sender(name="占星露露子體",icon_url="https://images.plurk.com/mx_4VTaVep70C5B6duT9MF6Fj.jpg"),1]
+
 
 def handle_astro(event):
     astro = ['牡羊座', '金牛座', '雙子座', '巨蟹座', '獅子座', '處女座', '天秤座', '天蠍座', '射手座', '魔羯座',
@@ -34,8 +36,11 @@ def handle_astro(event):
 
             data.insert(0,'')
             response = ''.join(data)
-            print(response)
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(response))
+            line_bot_api.reply_message(event.reply_token,
+                                       TextSendMessage
+                                       (text=response,
+                                        # sender=sendertool[0]
+                                        ))
         except Exception as e:
             print("Error:", e)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text="\BUG/,請聯繫開發者"))
@@ -50,7 +55,7 @@ def handle_week_astro(event):
         try:
             data = astr(text)
             response = data
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(response))
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=response,sender=Sender()))
         except Exception as e:
             print("Error:", e)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text="\BUG/,請聯繫開發者"))
@@ -155,6 +160,7 @@ def handle_showallfood(event):
 
 def handle_weekfate(event):
     data = weeklyfate()
+
     text_message = TextSendMessage(text=data)
     line_bot_api.reply_message(event.reply_token, text_message)
 

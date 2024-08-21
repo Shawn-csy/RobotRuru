@@ -14,6 +14,8 @@ app = Flask(__name__)
 channel_secret = os.getenv("CHANNEL_SECRET")
 handler = WebhookHandler(channel_secret)
 
+
+
 @app.route("/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
@@ -60,6 +62,8 @@ def handle_text_message(event):
        handle_random_box(event)
     elif '風險骰子' in text:
         handle_rich_dice(event)
+
+
 
 
 
