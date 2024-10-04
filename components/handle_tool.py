@@ -55,7 +55,7 @@ def handle_week_astro(event):
         try:
             data = astr(text)
             response = data
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=response,sender=Sender()))
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=response[0]))
         except Exception as e:
             print("Error:", e)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text="\BUG/,請聯繫開發者"))
@@ -63,31 +63,45 @@ def handle_week_astro(event):
 
 def handle_help(event):
     res = (
+        '####以下是機器露露的使用說明####\n\n'
         '## --help\n'
         '毫無反應,就是個說明\n\n'
         '## 輸入星座\n'
+        '(像是 雙子座 )\n'
         '獲得該天運勢\n\n'
         '## 輸入-w 星座\n'
+        '(像是-w 雙子座)\n'
         '獲得該週運勢\n\n'
         '## 輸入 本週國師\n'
         '獲得國師版該週運勢\n\n'
         '## -抽籤\n'
-        '抽非淺草簽\n\n'
+        '(像是-抽籤 我可以吃壽司嗎？)\n'
+        '抽不是淺草籤的其他籤種\n\n'
         '## 抽淺草寺\n'
+        '(像是-抽淺草寺 我可以吃烤鴨嗎？)\n'
         '回傳籤詩跟解籤\n\n'
         '## 抽快樂淺草寺\n'
-        '回傳籤詩跟解籤\n\n'
-        '#################\n'
+        '(像是-抽快樂淺草寺 我可以吃燒烤嗎？)\n'
+        '只會回傳正面的籤詩跟解籤\n\n'
+        '#################\n\n'
         '## 雷達\n'
         '獲得即時天氣雲圖\n\n'
         '## 好餓\n'
-        '獲得隨機推薦店家\n\n'
+        '獲得隨機推薦店家(隨機地區,對)\n\n'
         '## - 輸入`-隨機 [ 物件 物件 物件 ]` \n'
         '從物件中隨機挑選一個輸出, 可使用空格或,分隔\n\n'
         '## --update googlemap連結\n'
-        '更新進推薦資料庫\n'
+        '(像是--update 一個吃的google連結)\n'
+        '更新進推薦資料庫\n\n'
         '## --showfoodlist\n'
-        '羅列目前所有的食物推薦資料庫'
+        '羅列目前所有的食物推薦資料庫\n\n'
+        '#######BETA功能#####\n'
+        '## --風險骰子\n'
+        '隨機投擲一個風險骰子\n\n\n\n'
+        '############\n'
+        '有什麼想要的功能可以許願但不一定能實現ദി  ᷇ᵕ  ᷆  )\n'
+        '如果遭遇任何問題請聯繫開發者,我相信可以找到的吧?\n'
+
     )
     line_bot_api.reply_message(
         event.reply_token,
