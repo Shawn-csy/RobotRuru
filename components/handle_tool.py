@@ -3,6 +3,7 @@ from linebot.models import TextSendMessage, ImageSendMessage,Sender
 from components.astr import *
 from components.get_ticket import *
 from components.tool_box import *
+from components.stock_unit import *
 from linebot import LineBotApi
 from dotenv import load_dotenv
 from plurk_oauth import PlurkAPI
@@ -97,7 +98,13 @@ def handle_help(event):
         '羅列目前所有的食物推薦資料庫\n\n'
         '#######BETA功能#####\n'
         '## --風險骰子\n'
-        '隨機投擲一個風險骰子\n\n\n\n'
+        '隨機投擲一個風險骰子\n\n'
+        '## --本日韭菜\n'
+        '輸入“--本日韭菜” 獲得今日台股交易前20名\n\n'
+        '## --好想退休\n'
+        '輸入“--好想退休” 隨機抓取一個殖利率看起來還行的東西\n\n'
+        '謹慎理財 不要賭博 遠離股市 人生自由\n\n'
+        
         '############\n'
         '有什麼想要的功能可以許願但不一定能實現ദി  ᷇ᵕ  ᷆  )\n'
         '如果遭遇任何問題請聯繫開發者,我相信可以找到的吧?\n'
@@ -191,3 +198,19 @@ def handle_rich_dice(event):
 
 
 
+def handle_stock_data(event):
+    data = getTodayStockDeal()
+    text_message = TextSendMessage(text=data)
+    line_bot_api.reply_message(event.reply_token,text_message)
+
+def handle_stock_advise(event):
+    data = get_random_stock_advise()
+    text_message = TextSendMessage(text=data)
+    line_bot_api.reply_message(event.reply_token,text_message)
+
+# def handle_stock_opt(event):
+#     inputdata = event.message.text
+#     par = inputdata.split(" ")
+#     random_par = par(1)
+#     text_message = TextSendMessage(text=data)
+#     line_bot_api.reply_message(event.reply_token, text_message)

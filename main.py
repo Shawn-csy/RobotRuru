@@ -62,6 +62,11 @@ def handle_text_message(event):
        handle_random_box(event)
     elif '風險骰子' in text:
         handle_rich_dice(event)
+    elif '--本日韭菜' in text:
+        handle_stock_data(event)
+    elif '--好想退休' in text:
+        handle_stock_advise(event)
+
 
 
 
