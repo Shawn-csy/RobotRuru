@@ -71,7 +71,7 @@ def weeklyfate():
 
 
     if not script_tag:
-        print("No script tag found with the specified name.")
+        print("請去催更")
         return None
 
     try:
@@ -83,7 +83,7 @@ def weeklyfate():
                 days_diff = timedefine(item["datePublished"])
                 if days_diff is not None and days_diff < 8:
                     return item['description']
-        return "No relevant podcast found within the last week."
+        return "本週還沒有提醒～"
     except json.JSONDecodeError as je:
         print(f"Error decoding JSON: {je}")
         return None
