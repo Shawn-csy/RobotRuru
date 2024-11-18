@@ -51,7 +51,6 @@ def weeklyfate():
 
 
     if res.status_code != 200:
-        print("Failed to fetch URL")
         return None
 
     def timedefine(podcasttime):
@@ -62,7 +61,6 @@ def weeklyfate():
             difference = date_time1 - date_time2
             return difference.days
         except ValueError as ve:
-            print(f"Error parsing date: {ve}")
             return None
 
     html_content = res.content.decode()
@@ -71,7 +69,6 @@ def weeklyfate():
 
 
     if not script_tag:
-        print("請去催更")
         return None
 
     try:
@@ -85,8 +82,6 @@ def weeklyfate():
                     return item['description']
         return "本週還沒有提醒～"
     except json.JSONDecodeError as je:
-        print(f"Error decoding JSON: {je}")
         return None
     except KeyError as ke:
-        print(f"Missing expected key in JSON data: {ke}")
         return None
