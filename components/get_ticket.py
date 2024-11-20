@@ -37,7 +37,7 @@ def locat_ticket (rndNum):
         choose = fate_data[rndNum]
         formatted_num = str(rndNum+1).zfill(3)
         img_url = f'https://storage.googleapis.com/linebot01/img/{formatted_num}.jpg'
-        title = f'第{choose['id']}籤'
+        title = f'第{choose["id"]}籤'
         type = choose['type']
         poem = choose['poem']
         explain = choose['explain']

@@ -15,7 +15,6 @@ channel_secret = os.getenv("CHANNEL_SECRET")
 handler = WebhookHandler(channel_secret)
 
 
-
 @app.route("/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
@@ -70,12 +69,6 @@ def handle_text_message(event):
         handle_fate_ticket(event)
 
 
-@app.route("/",methods=["GET","POST"])
-def home():
-    return "still process"
-
-
-
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host='0.0.0.0', port=port)
+    
+    app.run(host='0.0.0.0', port=8080)
