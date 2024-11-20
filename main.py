@@ -66,9 +66,13 @@ def handle_text_message(event):
         handle_stock_data(event)
     elif '--好想退休' in text:
         handle_stock_advise(event)
+    elif '抽白沙屯' in text:
+        handle_fate_ticket(event)
 
 
-
+@app.route("/",methods=["GET","POST"])
+def home():
+    return "still process"
 
 
 

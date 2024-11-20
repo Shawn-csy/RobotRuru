@@ -104,7 +104,8 @@ def handle_help(event):
         '## --好想退休\n'
         '輸入“--好想退休” 隨機抓取一個殖利率看起來還行的東西\n\n'
         '謹慎理財 不要賭博 遠離股市 人生自由\n\n'
-        
+        '## 抽白沙屯\n'
+        '輸入“抽白沙屯” 獲得白沙屯媽祖籤詩\n\n'
         '############\n'
         '有什麼想要的功能可以許願但不一定能實現ദി  ᷇ᵕ  ᷆  )\n'
         '如果遭遇任何問題請聯繫開發者,我相信可以找到的吧?\n'
@@ -129,17 +130,39 @@ def handle_radar(event):
     image_message = ImageSendMessage(original_content_url=data[0], preview_image_url=data[0])
     line_bot_api.reply_message(event.reply_token, image_message)
 
-def handle_get_ticket(event,type):
-    if type =='normal':
+def handle_fate_ticket(event):
+    data = get_fateTicket()
+    message,img_url = data
+    
+    text_message = TextSendMessage(text=message)
+    image_message = ImageSendMessage(
+        original_content_url=img_url,
+        preview_image_url=img_url
+    )
+
+    line_bot_api.reply_message(event.reply_token, [image_message, text_message])
+
+
+def handle_get_ticket(event, type):
+    if type == 'normal':
         data = get_ticket()
     else:
         data = get_good_ticket()
 
-    content_list = data[0]
-    content = "\n\n".join(content_list) ##這邊要記得把list轉成str
-    img = data[1]
+    ticket_info, img_url = data
+    title, ticket_type, poem, explain, result = ticket_info
+    content = f"{title}\n" \
+              f"***{ticket_type}***\n\n" \
+              f"籤詩：\n{poem}\n\n" \
+              f"解籤：\n{explain}\n\n" \
+              f"結果：\n{result}"
+
     text_message = TextSendMessage(text=content)
-    image_message = ImageSendMessage(original_content_url=img, preview_image_url=img)
+    image_message = ImageSendMessage(
+        original_content_url=img_url,
+        preview_image_url=img_url
+    )
+
     line_bot_api.reply_message(event.reply_token, [image_message, text_message])
 
 def handle_rune(event):
