@@ -23,13 +23,33 @@ ACCESS_TOKEN_SECRET = os.getenv('plurk_secret')
 line_bot_api = LineBotApi(channel_access_token)
 plurk = PlurkAPI(CONSUMER_KEY, CONSUMER_SECRET)
 plurk.authorize(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+astro = ['牡羊座', '金牛座', '雙子座', '巨蟹座', '獅子座', '處女座', '天秤座', '天蠍座', '射手座', '魔羯座',
+             '水瓶座', '雙魚座']
 
-# sendertool = [Sender(name="占星露露子體",icon_url="https://images.plurk.com/mx_4VTaVep70C5B6duT9MF6Fj.jpg"),1]
+
+def handle_all_astro(event):
+    text = event.message.text.replace('-a','').strip()
+
+    if text in astro:
+        try:
+            dayData = astr_today(text)
+            dayData.insert(0, '')
+            Dayresponse = ''.join(dayData)
+            weekdata = astr(text)
+            weekres = ''.join(weekdata)
+            res = Dayresponse + "\n" + weekres
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=res))
+
+
+        except Exception as e :
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text="快拿殺蟲劑"))
+
+
+
 
 
 def handle_astro(event):
-    astro = ['牡羊座', '金牛座', '雙子座', '巨蟹座', '獅子座', '處女座', '天秤座', '天蠍座', '射手座', '魔羯座',
-             '水瓶座', '雙魚座']
+
     text = event.message.text
     if text in astro:
         try:
@@ -44,12 +64,11 @@ def handle_astro(event):
                                         ))
         except Exception as e:
             print("Error:", e)
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text="\BUG/,請聯繫開發者"))
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text="快拿殺蟲劑"))
 
 
 def handle_week_astro(event):
-    astro = ['牡羊座', '金牛座', '雙子座', '巨蟹座', '獅子座', '處女座', '天秤座', '天蠍座', '射手座', '魔羯座',
-             '水瓶座', '雙魚座']
+
     text = event.message.text.replace('-w', '').strip()
 
     if text in astro:
@@ -59,7 +78,7 @@ def handle_week_astro(event):
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=response[0]))
         except Exception as e:
             print("Error:", e)
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text="\BUG/,請聯繫開發者"))
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text="快拿殺蟲劑"))
 
 
 def handle_help(event):
@@ -72,7 +91,9 @@ def handle_help(event):
         '獲得該天運勢\n\n'
         '## 輸入-w 星座\n'
         '(像是-w 雙子座)\n'
-        '獲得該週運勢\n\n'
+        '## 輸入-a 星座\n'
+        '(像是-a 雙子座)\n'
+        '獲得當天&該週運勢\n\n'
         '## 輸入 本週國師\n'
         '獲得國師版該週運勢\n\n'
         '## -抽籤\n'
@@ -96,16 +117,25 @@ def handle_help(event):
         '更新進推薦資料庫\n\n'
         '## --showfoodlist\n'
         '羅列目前所有的食物推薦資料庫\n\n'
-        '#######BETA功能#####\n'
-        '## --風險骰子\n'
+         '## --風險骰子\n'
         '隨機投擲一個風險骰子\n\n'
-        '## --本日韭菜\n'
+         '## --本日韭菜\n'
         '輸入“--本日韭菜” 獲得今日台股交易前20名\n\n'
         '## --好想退休\n'
         '輸入“--好想退休” 隨機抓取一個殖利率看起來還行的東西\n\n'
         '謹慎理財 不要賭博 遠離股市 人生自由\n\n'
+        '#######BETA功能#####\n'
         '## 抽白沙屯\n'
         '輸入“抽白沙屯” 獲得白沙屯媽祖籤詩\n\n'
+        '# 使用紫微解盤\n'
+        '# 使用紫微解盤時需特別注意如何使用\n'
+        '## -c 紫微 性別,出生年月日,時辰\n'
+        '性別：女為0,男為1\n'
+        '出生年月日：西元四碼+兩碼月+兩碼日\n'
+        '時辰：使用一天24小時制\n'
+        '使用範例：\n'
+        '男1993年12月3號,中午十二點生：-c 紫微 1,19931203,12\n'
+        '女1999年2月15號,晚上九點生：-c 紫微 0,19990215,21\n\n'
         '############\n'
         '有什麼想要的功能可以許願但不一定能實現ദി  ᷇ᵕ  ᷆  )\n'
         '如果遭遇任何問題請聯繫開發者,我相信可以找到的吧?\n'
@@ -220,7 +250,6 @@ def handle_rich_dice(event):
     line_bot_api.reply_message(event.reply_token, image_message)
 
 
-
 def handle_stock_data(event):
     data = getTodayStockDeal()
     text_message = TextSendMessage(text=data)
@@ -230,6 +259,26 @@ def handle_stock_advise(event):
     data = get_random_stock_advise()
     text_message = TextSendMessage(text=data)
     line_bot_api.reply_message(event.reply_token,text_message)
+
+
+def handle_qrcode (event):
+    text = event.message.text.replace('-qrcode', '').strip()
+    qr_url = f"https://ruru-api-558195193094.asia-east1.run.app/ctqrcode?qrcode_data={text}.png"
+
+    image_message = ImageSendMessage(original_content_url=qr_url, preview_image_url=qr_url)
+    replyText = f"以下是qrCode包含的資訊:{text}"
+    text_message = TextSendMessage(text=replyText)
+    # line_bot_api.reply_message(event.reply_token, text_message)
+    print(qr_url)
+    line_bot_api.reply_message(event.reply_token, image_message)
+
+def handle_ziwei(event):
+    text = event.message.text.replace('-c 紫微', '').strip()
+    processdata = text.split(',')
+    res = process_ziwei(processdata)
+    text_message = TextSendMessage(text=res)
+    line_bot_api.reply_message(event.reply_token, text_message)
+
 
 # def handle_stock_opt(event):
 #     inputdata = event.message.text

@@ -31,8 +31,13 @@ def handle_text_message(event):
     astro = ['牡羊座', '金牛座', '雙子座', '巨蟹座', '獅子座', '處女座', '天秤座', '天蠍座', '射手座', '魔羯座',
              '水瓶座', '雙魚座']
 
+
     if '-w' in text and text.replace('-w','').strip() in astro:
         handle_week_astro(event)
+
+    elif '-a' in text and text.replace('-a','').strip() in astro:
+        handle_all_astro(event)
+
     elif text in astro:
         handle_astro(event)
 
@@ -67,6 +72,10 @@ def handle_text_message(event):
         handle_stock_advise(event)
     elif '抽白沙屯' in text:
         handle_fate_ticket(event)
+    elif '-qrcode' in text:
+        handle_qrcode(event)
+    elif '-c 紫微' in text:
+        handle_ziwei(event)
 
 
 if __name__ == "__main__":
