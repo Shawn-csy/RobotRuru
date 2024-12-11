@@ -43,6 +43,10 @@ def handle_text_message(event):
 
     elif '--help' in text:
         handle_help(event)
+    elif '--newhelp' in text:
+        handle_new_help(event)
+    elif '-d-i help' in text:
+        handle_help_detail(event)
 
     elif '-抽籤' in text:
         handle_spin(event)

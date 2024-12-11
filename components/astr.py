@@ -376,9 +376,10 @@ def process_ziwei(processdata):
             f"★ 流年\n{future_fate['流年']['完整描述']}\n\n"
             f"★ 小限\n{future_fate['小限']['完整描述']}\n\n"
             "==================\n"
-            "解析僅供參考"
+            "（解析來自科技紫微網）\n"
+            "（還想怎樣）\n"
         )
-        parse_res = res.replace('...', "[以下內容需要付費]")
+        parse_res = res.replace('...', "「免費仔知道這些就夠了」")
         return  parse_res
 
     except ValueError:
