@@ -295,7 +295,8 @@ def handle_spin(event):
 def handle_radar(event):
     data = radar()
     image_message = ImageSendMessage(original_content_url=data[0], preview_image_url=data[0])
-    line_bot_api.reply_message(event.reply_token, image_message)
+    messages = [image_message] 
+    line_bot_api.reply_message(event.reply_token, messages)
 
 def handle_fate_ticket(event):
     data = get_fateTicket()

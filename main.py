@@ -1,4 +1,3 @@
-
 from flask import Flask, request, abort
 from linebot import WebhookHandler
 from linebot.exceptions import InvalidSignatureError
@@ -29,6 +28,26 @@ def callback():
 def handle_text_message(event):
     text = event.message.text
     user_id = event.source.user_id
+    chat_history = get_chat_history()
+    
+    # 檢查是否在聊天模式
+    if chat_history.is_chatting(user_id) or text.strip() in ['!請神符', '!送神符'] or text.startswith('!請神符'):
+        # 檢查是否為特殊指令並執行
+        command_executed = handle_special_commands(event)
+        
+        # 如果沒有執行特殊指令，才使用 AI 回應
+        if not command_executed:
+            handle_ruruTalk(event)
+        return
+
+    # 一般指令處理
+    command_executed = handle_special_commands(event)
+    if not command_executed:
+        handle_ruruTalk(event)
+
+def handle_special_commands(event):
+    """處理所有特殊指令，返回是否已處理"""
+    text = event.message.text
     
     # 指令映射表
     command_handlers = {
@@ -48,11 +67,10 @@ def handle_text_message(event):
         '-qrcode': handle_qrcode
     }
 
-    # 特殊指令處理
-    chat_history = get_chat_history()
-    if chat_history.is_chatting(user_id) or text.strip() in ['!請神符', '!送神符'] or text.startswith('!請神符'):
-        handle_ruruTalk(event)
-        return
+    # 檢查一般指令
+    if text in command_handlers:
+        command_handlers[text](event)
+        return True
 
     # 星座相關指令處理
     astro = ['牡羊座', '金牛座', '雙子座', '巨蟹座', '獅子座', '處女座', 
@@ -60,35 +78,31 @@ def handle_text_message(event):
     
     if text in astro:
         handle_astro(event)
-        return
+        return True
     
     if '-w' in text and text.replace('-w','').strip() in astro:
         handle_week_astro(event)
-        return
+        return True
         
     if '-a' in text and text.replace('-a','').strip() in astro:
         handle_all_astro(event)
-        return
+        return True
 
     # 抽籤相關指令處理
     if '抽淺草寺' in text:
         handle_get_ticket(event, 'normal' if '快樂' not in text else 'weeeeeee')
-        return
+        return True
         
     if '抽白沙屯' in text:
         handle_fate_ticket(event)
-        return
+        return True
 
     # 紫微斗數處理
     if '-c 紫微' in text:
         handle_ziwei(event)
-        return
+        return True
 
-    # 一般指令處理
-    if text in command_handlers:
-        command_handlers[text](event)
-        return
-
+    return False
 
 
 if __name__ == "__main__":

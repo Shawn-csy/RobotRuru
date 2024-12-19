@@ -22,9 +22,8 @@ def handle_ruruTalk(event):
             chat_history.start_chat(user_id)
             message = "這是一段聊天的開始 , 使用者使用了請神符召喚你 , 同時生成一個貓咪的生活狀態,並維持這個生活狀態後語句簡短的回應"
             response = sync_generate_content(message, user_id)
-
-            chat_history.add_history(user_id, text, response)
-            print(f"開始對話: {user_id}")  # 調試日誌
+            print(f"開始對話: {user_id}, 初始回應: {response}")  # 調試日誌
+            
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text=response)
@@ -53,11 +52,10 @@ def handle_ruruTalk(event):
             print(f"用戶 {user_id} 不在對話模式")  # 調試日誌
             return
 
-        # 生成回應
+        # 生成回應前檢查歷史記錄
+        print(f"當前對話歷史: {chat_history.get_recent_history(user_id)}")
         response = sync_generate_content(text, user_id)
-        
-        # 檢查歷史記錄
-        print(f"當前對話歷史: {chat_history.get_recent_history(user_id)}")  # 調試日誌
+        print(f"生成回應: {response}")  # 調試日誌
         
         # 發送回應
         line_bot_api.reply_message(

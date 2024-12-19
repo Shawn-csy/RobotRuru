@@ -16,8 +16,8 @@ class MemoryChatHistory:
         self._init_db()
         self.TIMEOUT = 300  # 5分鐘無活動自動結束對話
         self.MAX_USERS = 10000  # 限制最大用戶數
-        self.HISTORY_LIMIT = 20  # 減少每個用戶的歷史記錄數
-        print("初始化 MemoryChatHistory")  # 調試日誌
+        self.HISTORY_LIMIT = 100  # 減少每個用戶的歷史記錄數
+        
 
     def _init_db(self):
         """初始化數據庫表"""
@@ -122,15 +122,22 @@ class MemoryChatHistory:
 
     def get_recent_history(self, user_id, limit=5):
         """獲取最近的對話記錄"""
-        result = self.db.execute("""
-            SELECT message, response
-            FROM chat_history
-            WHERE user_id = ?
-            ORDER BY timestamp DESC
-            LIMIT ?
-        """, [user_id, limit]).fetchall()
-        
-        return [(msg, resp) for msg, resp in reversed(result)]
+        try:
+            result = self.db.execute("""
+                SELECT message, response
+                FROM chat_history
+                WHERE user_id = ?
+                ORDER BY timestamp DESC
+                LIMIT ?
+            """, [user_id, limit]).fetchall()
+            
+            history = [(msg, resp) for msg, resp in reversed(result)]
+            print(f"用戶 {user_id} 的歷史記錄: {history}")  # 調試日誌
+            return history
+            
+        except Exception as e:
+            print(f"獲取歷史記錄錯誤: {e}")  # 調試日誌
+            return []
 
     def cleanup_old_users(self):
         """清理不活躍用戶"""
