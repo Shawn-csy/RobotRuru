@@ -1,10 +1,10 @@
-import re
 
 from flask import Flask, request, abort
 from linebot import WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage
 from components.handle_tool import *
+from components.handle_ai import *
 import os
 from dotenv import load_dotenv
 
@@ -28,58 +28,67 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     text = event.message.text
-    astro = ['牡羊座', '金牛座', '雙子座', '巨蟹座', '獅子座', '處女座', '天秤座', '天蠍座', '射手座', '魔羯座',
-             '水瓶座', '雙魚座']
+    user_id = event.source.user_id
+    
+    # 指令映射表
+    command_handlers = {
+        '--help': handle_help,
+        '--newhelp': handle_new_help,
+        '-d-i help': handle_help_detail,
+        '-抽籤': handle_spin,
+        '雷達': handle_radar,
+        '本週國師': handle_weekfate,
+        '好餓': handle_food,
+        '--update': handle_updatefood,
+        '--showfoodlist': handle_showallfood,
+        '-隨機': handle_random_box,
+        '風險骰子': handle_rich_dice,
+        '--本日韭菜': handle_stock_data,
+        '--好想退休': handle_stock_advise,
+        '-qrcode': handle_qrcode
+    }
 
+    # 特殊指令處理
+    chat_history = get_chat_history()
+    if chat_history.is_chatting(user_id) or text.strip() in ['--talk', '--talkover'] or text.startswith('-talk'):
+        handle_ruruTalk(event)
+        return
 
+    # 星座相關指令處理
+    astro = ['牡羊座', '金牛座', '雙子座', '巨蟹座', '獅子座', '處女座', 
+             '天秤座', '天蠍座', '射手座', '魔羯座', '水瓶座', '雙魚座']
+    
+    if text in astro:
+        handle_astro(event)
+        return
+    
     if '-w' in text and text.replace('-w','').strip() in astro:
         handle_week_astro(event)
-
-    elif '-a' in text and text.replace('-a','').strip() in astro:
+        return
+        
+    if '-a' in text and text.replace('-a','').strip() in astro:
         handle_all_astro(event)
+        return
 
-    elif text in astro:
-        handle_astro(event)
-
-    elif '--help' in text:
-        handle_help(event)
-    elif '--newhelp' in text:
-        handle_new_help(event)
-    elif '-d-i help' in text:
-        handle_help_detail(event)
-
-    elif '-抽籤' in text:
-        handle_spin(event)
-    elif '雷達' == text: #雷達縮圖有問題
-        handle_radar(event)
-    elif '本週國師' == text :
-        handle_weekfate(event)
-    elif '抽淺草寺' in text:
-        handle_get_ticket(event,'normal')
-    elif '抽快樂淺草寺' in text:
-        handle_get_ticket(event,'weeeeeee')
-    elif text == '盧恩':
-        handle_rune(event)
-    elif text =='好餓':
-        handle_food(event)
-    elif '--update' in text :
-        handle_updatefood(event)
-    elif '--showfoodlist' in text :
-        handle_showallfood(event)
-    elif '-隨機' in text:
-       handle_random_box(event)
-    elif '風險骰子' in text:
-        handle_rich_dice(event)
-    elif '--本日韭菜' in text:
-        handle_stock_data(event)
-    elif '--好想退休' in text:
-        handle_stock_advise(event)
-    elif '抽白沙屯' in text:
+    # 抽籤相關指令處理
+    if '抽淺草寺' in text:
+        handle_get_ticket(event, 'normal' if '快樂' not in text else 'weeeeeee')
+        return
+        
+    if '抽白沙屯' in text:
         handle_fate_ticket(event)
-    elif '-qrcode' in text:
-        handle_qrcode(event)
-    elif '-c 紫微' in text:
+        return
+
+    # 紫微斗數處理
+    if '-c 紫微' in text:
         handle_ziwei(event)
+        return
+
+    # 一般指令處理
+    if text in command_handlers:
+        command_handlers[text](event)
+        return
+
 
 
 if __name__ == "__main__":

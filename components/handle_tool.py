@@ -3,6 +3,7 @@ from components.astr import *
 from components.get_ticket import *
 from components.tool_box import *
 from components.stock_unit import *
+from components.ai_Bot import *
 from linebot import LineBotApi
 from dotenv import load_dotenv
 from plurk_oauth import PlurkAPI
@@ -30,7 +31,7 @@ line_bot_api = LineBotApi(channel_access_token)
 plurk = PlurkAPI(CONSUMER_KEY, CONSUMER_SECRET)
 plurk.authorize(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 astro = ['牡羊座', '金牛座', '雙子座', '巨蟹座', '獅子座', '處女座', '天秤座', '天蠍座', '射手座', '魔羯座',
-             '水瓶座', '雙魚座']
+             '水瓶座', '雙����座']
 
 
 def handle_all_astro(event):
@@ -198,7 +199,7 @@ def handle_help(event):
         "🎲 娛樂功能\n"
         "⭐ --風險骰子\n"
         "\n"
-        "📊 股市資訊\n"
+        "���� ��市資訊\n"
         "⭐ --本日韭菜台股前20名\n"
         "⭐ --好想退休：隨機股票建議\n"
         "\n"
@@ -235,7 +236,7 @@ def handle_help_detail(event):
         '# 啟動指令：\n'
         '- 輸入 本週國師 → 獲得國師版該週運勢\n\n'
         '【抽籤功能】\n'
-        '# 啟動指令：\n'
+        '# 啟動������：\n'
         '- -抽籤 問題，例如：-抽籤 我可以吃壽司嗎？ → 隨機抽其他籤種\n'
         '- -抽淺草寺 問題，例如：-抽淺草寺 我可以吃烤鴨嗎？ → 回傳籤詩與解籤\n'
         '- -抽快樂淺草寺 問題，例如：-抽快樂淺草寺 我可以吃燒烤嗎？ → 回傳正面籤詩與解籤\n\n'
@@ -256,7 +257,7 @@ def handle_help_detail(event):
         '- 輸入 --本日韭菜 → 獲得今日台股交易前20名\n\n'
         '【退休建議】\n'
         '# 啟動指令：\n'
-        '- 輸入 --好想退休 → 隨機抓取一個殖利率看起來還行的標的\n'
+        '- 輸入 --好想退休 → 隨機抓取一個殖利率看起來��行的��的\n'
         '> 謹慎理財，遠離股市，人生自由\n\n'
         '【BETA功能】\n'
         '# 抽白沙屯：\n'
@@ -346,7 +347,7 @@ def handle_food(event):
         title = TextSendMessage(text=BeautifulSoup(choose['content'], 'html.parser').a.text)
         line_bot_api.reply_message(event.reply_token, [title, url])
     except:
-        error = TextSendMessage(text='請過段時間後再次嘗試')
+        error = TextSendMessage(text='���過段時間後再次嘗試')
         line_bot_api.reply_message(event.reply_token, error)
 
 def handle_updatefood(event):
@@ -455,7 +456,7 @@ def handle_new_help(event):
                             style='primary',
                             color='#27ACB2',
                             action=MessageAction(
-                                label="天氣",
+                                label="天��",
                                 text="雷達"
                             ),
                             flex=1,
@@ -606,9 +607,4 @@ def handle_new_help(event):
         )
 
     line_bot_api.reply_message(event.reply_token, flex_message)
-# def handle_stock_opt(event):
-#     inputdata = event.message.text
-#     par = inputdata.split(" ")
-#     random_par = par(1)
-#     text_message = TextSendMessage(text=data)
-#     line_bot_api.reply_message(event.reply_token, text_message)
+
