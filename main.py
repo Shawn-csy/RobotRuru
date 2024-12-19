@@ -50,7 +50,7 @@ def handle_text_message(event):
 
     # 特殊指令處理
     chat_history = get_chat_history()
-    if chat_history.is_chatting(user_id) or text.strip() in ['--talk', '--talkover'] or text.startswith('-talk'):
+    if chat_history.is_chatting(user_id) or text.strip() in ['!請神符', '!送神符'] or text.startswith('!請神符'):
         handle_ruruTalk(event)
         return
 

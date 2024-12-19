@@ -15,6 +15,8 @@ class MemoryChatHistory:
         self.db = duckdb.connect(':memory:')  # 使用內存數據庫
         self._init_db()
         self.TIMEOUT = 300  # 5分鐘無活動自動結束對話
+        self.MAX_USERS = 10000  # 限制最大用戶數
+        self.HISTORY_LIMIT = 20  # 減少每個用戶的歷史記錄數
         print("初始化 MemoryChatHistory")  # 調試日誌
 
     def _init_db(self):
@@ -129,3 +131,10 @@ class MemoryChatHistory:
         """, [user_id, limit]).fetchall()
         
         return [(msg, resp) for msg, resp in reversed(result)]
+
+    def cleanup_old_users(self):
+        """清理不活躍用戶"""
+        self.db.execute("""
+            DELETE FROM chat_status 
+            WHERE last_activity < CURRENT_TIMESTAMP - INTERVAL '1 hour'
+        """)

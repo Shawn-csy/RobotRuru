@@ -3,19 +3,11 @@ from components.ai_Bot import *
 from components.chat_history import get_chat_history
 from linebot import LineBotApi
 from dotenv import load_dotenv
-import random
 import os
 load_dotenv()
 
 channel_access_token = os.getenv("CHANNEL_ACCESS_TOKEN")
 line_bot_api = LineBotApi(channel_access_token)
-
-
-def handle_talkState(event):
-    text = event.message.text
-    user_id = event.source.user_id
-    chat_history = get_chat_history()
-
 
 
 def handle_ruruTalk(event):
@@ -26,9 +18,11 @@ def handle_ruruTalk(event):
 
     try:
         # 處理開始對話指令
-        if text.strip() == '--talk':
+        if text.strip() == '!請神符':
             chat_history.start_chat(user_id)
-            response = "喵～露露來陪你聊天啦！想結束對話的話，請說 --talkover 喔！"
+            message = "這是一段聊天的開始 , 使用者使用了請神符召喚你 , 同時生成一個貓咪的生活狀態,並維持這個生活狀態後語句簡短的回應"
+            response = sync_generate_content(message, user_id)
+
             chat_history.add_history(user_id, text, response)
             print(f"開始對話: {user_id}")  # 調試日誌
             line_bot_api.reply_message(
@@ -38,9 +32,11 @@ def handle_ruruTalk(event):
             return
 
         # 處理結束對話指令
-        if text.strip() == '--talkover':
+        if text.strip() == '!送神符':
             chat_history.end_chat(user_id)
-            response = "喵～下次再聊喔！"
+            message = "這是一段聊天的結束 , 使用者使用了送神符解除召喚,結合最後的話題離去,語句要簡短"
+            response = sync_generate_content(message, user_id)
+
             chat_history.add_history(user_id, text, response)
             print(f"結束對話: {user_id}")  # 調試日誌
             line_bot_api.reply_message(

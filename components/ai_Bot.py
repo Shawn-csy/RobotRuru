@@ -10,7 +10,6 @@ def sync_generate_content(message, user_id):
     apiKey = os.getenv("gemini")
     client = genai.Client(api_key=apiKey)
     chat_history = get_chat_history()
-
     try:
         recent_history = chat_history.get_recent_history(user_id)
         # 基礎設定和完整功能說明
