@@ -107,6 +107,7 @@ def handle_astro(event):
 
 def handle_week_astro(event):
     text = event.message.text.replace('-w', '').strip()
+    
 
     if text in astro:
         try:
@@ -117,7 +118,6 @@ def handle_week_astro(event):
             
             # 處理第一個元素中的所有運勢內容
             content_lines = data[0].split('\n')
-            
             # 取得標題
             title = f"本週{text}運勢"
             
@@ -129,13 +129,14 @@ def handle_week_astro(event):
                         parts = line.split("：", 1)
                         if len(parts) == 2:
                             content = parts[1]
-                            # 週運沒有星星評分，使用固定值
-                            star_count = 3  # 或者可以根據內容關鍵字判斷
+                            star_count = parts[0].count("★")
                             star_counts.append((star_count, content.strip()))
                             found = True
                             break
                 if not found:
                     star_counts.append((0, "暫無資料"))
+
+            
 
             reminder_parts = []
             if content_lines[-1] and not any(x in content_lines[-1] for x in ["運勢", "解析"]):
@@ -219,6 +220,7 @@ def handle_help(event):
         event.reply_token,
         TextSendMessage(text=res)
     )
+
 
 
 def handle_help_detail(event):
